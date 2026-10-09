@@ -47,3 +47,36 @@ Every "No" in this table means the app must refuse the request, and there should
 ## 4. Product backlog
 
 ## 5. Process and ceremonies
+
+### 5.1 Sprint length
+
+Sprint duration: **2 weeks**. It is long enough to finish a few stories and short enough to correct course quickly.
+
+### 5.2 Sprint backlog (Sprint 1)
+
+Taken from the top of the Product Backlog:
+
+| ID | Story |
+|---|---|
+| US-01 | Manage user accounts and roles |
+| US-04 | Register, search and edit patients |
+| US-02 | Manage doctors |
+
+### 5.3 Ceremonies
+
+| Ceremony | When | Duration | Purpose |
+|---|---|---|---|
+| Sprint Planning | First day of the sprint | 1-2 hours | Choose stories from the top of the Product Backlog and split them into tasks. |
+| Daily Scrum | Every day | 15 minutes | Say what was done, what is next, and what blocks us. |
+| Sprint Review | Last day of the sprint | 1 hour | Demo the finished stories and collect feedback. |
+| Sprint Retrospective | After the review | 45 minutes | Discuss what went well, what did not, and what to improve next sprint. |
+
+### 5.4 What triggers backlog refinement
+
+- A story is too big to finish in one sprint, so it needs splitting.
+- Feedback from the Sprint Review changes priorities.
+- A new requirement or a change in the scenario appears.
+- A bug or technical problem blocks a planned story.
+- Acceptance criteria are unclear when planning starts.
+
+Refinement is done regularly, once per sprint, around the middle of the sprint.
