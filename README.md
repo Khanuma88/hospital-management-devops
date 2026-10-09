@@ -75,6 +75,67 @@ Taken from the top of the Product Backlog:
 
 - A story is too big to finish in one sprint, so it needs splitting.
 - Feedback from the Sprint Review changes priorities.
+
+
+## 6. Task decomposition
+
+Hierarchy: **Epic → User Story → Task**.
+Branch names follow the story identifier, e.g. `feature/us-01-user-management`.
+Test tasks are marked **[AUTO]** (automated code test, later run in CI) or **[MANUAL]** (executed by hand).
+Only the stories selected for Sprint 1 and the first scheduling story are decomposed here.
+
+### 6.1 Epics and stories
+
+| Epic | Name | Stories | Depends on |
+|---|---|---|---|
+| EP-1 | Users and access control | US-01 user-management | none |
+| EP-2 | Patients and doctors | US-04 patient-management, US-02 doctor-management | US-01 |
+| EP-3 | Appointments | US-05 appointment-scheduling | US-04, US-02 |
+
+### 6.2 EP-1 Users and access control
+
+#### US-01 user-management (no dependencies)
+
+| Task | Description | Depends on |
+|---|---|---|
+| T-01.1 | Create User and Role data model | none |
+| T-01.2 | Implement login and role-based authorization check | T-01.1 |
+| T-01.3 | Implement create, edit and disable user endpoints (admin only) | T-01.2 |
+| T-01.4 | [AUTO] Integration tests: admin can manage users; Receptionist and Doctor are refused (403) | T-01.3 |
+| T-01.5 | [MANUAL] Create a user in the UI and log in with that role | T-01.3 |
+
+### 6.3 EP-2 Patients and doctors
+
+#### US-04 patient-management (depends on US-01)
+
+| Task | Description | Depends on |
+|---|---|---|
+| T-04.1 | Create Patient data model | none |
+| T-04.2 | Implement register, search and edit patient endpoints with validation | T-04.1 |
+| T-04.3 | [AUTO] Unit tests: missing required fields are rejected | T-04.2 |
+| T-04.4 | [AUTO] Integration tests: Receptionist and Admin allowed, Doctor refused | T-04.2 |
+| T-04.5 | [MANUAL] Register a patient and find them by last name | T-04.2 |
+
+#### US-02 doctor-management (depends on US-01)
+
+| Task | Description | Depends on |
+|---|---|---|
+| T-02.1 | Create Doctor data model | none |
+| T-02.2 | Implement register, update and deactivate doctor endpoints (admin only) | T-02.1 |
+| T-02.3 | [AUTO] Integration tests: Receptionist and Doctor are refused | T-02.2 |
+| T-02.4 | [MANUAL] Deactivated doctor does not appear in the booking list | T-02.2 |
+
+### 6.4 EP-3 Appointments
+
+#### US-05 appointment-scheduling (depends on US-04, US-02)
+
+| Task | Description | Depends on |
+|---|---|---|
+| T-05.1 | Create Appointment data model (patient, doctor, date, time, status) | none |
+| T-05.2 | Implement schedule, change and cancel endpoints | T-05.1 |
+| T-05.3 | Validation: no past dates, no inactive patient or doctor | T-05.2 |
+| T-05.4 | [AUTO] Unit tests for the validation rules | T-05.3 |
+| T-05.5 | [AUTO] Integration test: Doctor cannot schedule appointments | T-05.2 |
 - A new requirement or a change in the scenario appears.
 - A bug or technical problem blocks a planned story.
 - Acceptance criteria are unclear when planning starts.
