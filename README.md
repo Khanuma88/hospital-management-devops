@@ -79,65 +79,153 @@ Taken from the top of the Product Backlog:
 
 ## 6. Task decomposition
 
-Hierarchy: **Epic → User Story → Task**.
-Branch names follow the story identifier, e.g. `feature/us-01-user-management`.
-Test tasks are marked **[AUTO]** (automated code test, later run in CI) or **[MANUAL]** (executed by hand).
-Only the stories selected for Sprint 1 and the first scheduling story are decomposed here.
+Hierarchy: **Epic → User Story → Task**. Branches will be named `feature/US-05-short-name`, issue titles `T-05.3 short description`.
+Task kinds: **Code**, **Test - automated** (runs in CI), **Test - manual** (checklist).
+Stories US-10 to US-14 were added to the Lab 1 backlog because the pipeline and CSV export are also work.
 
-### 6.1 Epics and stories
+### 6.1 Epics
 
-| Epic | Name | Stories | Depends on |
+| Epic | Name | Stories |
+|---|---|---|
+| E1 | Authentication and access | US-01, US-03 |
+| E2 | Patient management | US-04 |
+| E3 | Doctor management | US-02 |
+| E4 | Appointment scheduling | US-05, US-06, US-07, US-09 |
+| E5 | Medical records and export | US-08, US-12 |
+| E6 | Platform and pipeline | US-10, US-11, US-13, US-14 |
+
+New stories:
+- **US-10**: As a developer, I want a CI pipeline that builds and tests on every push, so that broken code is caught early.
+- **US-11**: As a developer, I want the app containerised and published automatically, so that it can be deployed the same way every time.
+- **US-12**: As a Doctor or Administrator, I want to export authorised data to CSV, so that I can use it in reports.
+- **US-13**: As a developer, I want end-to-end tests of the main flows, so that role and booking rules are checked in a real browser.
+- **US-14**: As an Administrator, I want basic monitoring metrics, so that I can see if the system is healthy.
+
+### 6.2 Decomposed stories
+
+#### US-01 user-management (Epic E1) - Blocked by: none
+
+| Task | Description | Kind | Blocked by |
 |---|---|---|---|
-| EP-1 | Users and access control | US-01 user-management | none |
-| EP-2 | Patients and doctors | US-04 patient-management, US-02 doctor-management | US-01 |
-| EP-3 | Appointments | US-05 appointment-scheduling | US-04, US-02 |
+| T-01.1 | User and Role entity and migration | Code | none |
+| T-01.2 | Login, password hashing, sessions | Code | T-01.1 |
+| T-01.3 | Role check on every route (refuse with 403) | Code | T-01.2 |
+| T-01.4 | Admin endpoints: create, edit, disable user | Code | T-01.3 |
+| T-01.5 | Tests: every "No" in the RBAC matrix is refused; disabled user cannot log in | Test - automated | T-01.4 |
+| T-01.6 | Create a user in the UI and log in with that role | Test - manual | T-01.4 |
 
-### 6.2 EP-1 Users and access control
+#### US-10 ci-pipeline (Epic E6) - Blocked by: none
 
-#### US-01 user-management (no dependencies)
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-10.1 | Project skeleton and test runner | Code | none |
+| T-10.2 | GitHub Actions workflow: install, lint, test on every push | Code | T-10.1 |
+| T-10.3 | Require a green build before merging a pull request | Code | T-10.2 |
+| T-10.4 | A deliberately failing test turns the build red | Test - automated | T-10.2 |
 
-| Task | Description | Depends on |
-|---|---|---|
-| T-01.1 | Create User and Role data model | none |
-| T-01.2 | Implement login and role-based authorization check | T-01.1 |
-| T-01.3 | Implement create, edit and disable user endpoints (admin only) | T-01.2 |
-| T-01.4 | [AUTO] Integration tests: admin can manage users; Receptionist and Doctor are refused (403) | T-01.3 |
-| T-01.5 | [MANUAL] Create a user in the UI and log in with that role | T-01.3 |
+#### US-04 patient-management (Epic E2) - Blocked by: US-01
 
-### 6.3 EP-2 Patients and doctors
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-04.1 | Patient entity and migration | Code | none |
+| T-04.2 | Service: register, search, edit patient with validation | Code | T-04.1 |
+| T-04.3 | Patient form and search page | Code | T-04.2 |
+| T-04.4 | Unit tests: missing required fields are rejected | Test - automated | T-04.2 |
+| T-04.5 | Integration tests: Receptionist and Admin allowed, Doctor refused | Test - automated | T-04.2 |
+| T-04.6 | Check error wording and empty search result screen | Test - manual | T-04.3 |
 
-#### US-04 patient-management (depends on US-01)
+#### US-02 doctor-management (Epic E3) - Blocked by: US-01
 
-| Task | Description | Depends on |
-|---|---|---|
-| T-04.1 | Create Patient data model | none |
-| T-04.2 | Implement register, search and edit patient endpoints with validation | T-04.1 |
-| T-04.3 | [AUTO] Unit tests: missing required fields are rejected | T-04.2 |
-| T-04.4 | [AUTO] Integration tests: Receptionist and Admin allowed, Doctor refused | T-04.2 |
-| T-04.5 | [MANUAL] Register a patient and find them by last name | T-04.2 |
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-02.1 | Doctor entity and migration | Code | none |
+| T-02.2 | Service: register, update, deactivate doctor (admin only) | Code | T-02.1 |
+| T-02.3 | Doctor management page | Code | T-02.2 |
+| T-02.4 | Integration tests: Receptionist and Doctor are refused | Test - automated | T-02.2 |
 
-#### US-02 doctor-management (depends on US-01)
+#### US-05 appointment-scheduling (Epic E4) - Blocked by: US-02, US-04
 
-| Task | Description | Depends on |
-|---|---|---|
-| T-02.1 | Create Doctor data model | none |
-| T-02.2 | Implement register, update and deactivate doctor endpoints (admin only) | T-02.1 |
-| T-02.3 | [AUTO] Integration tests: Receptionist and Doctor are refused | T-02.2 |
-| T-02.4 | [MANUAL] Deactivated doctor does not appear in the booking list | T-02.2 |
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-05.1 | Appointment entity and migration (patient, doctor, datetime, status) | Code | none |
+| T-05.2 | Service: schedule, change, cancel appointment | Code | T-05.1 |
+| T-05.3 | Validation: no past dates, no inactive patient or doctor | Code | T-05.1 |
+| T-05.4 | Booking form with patient and doctor pickers | Code | T-05.2 |
+| T-05.5 | Unit tests for the validation rules | Test - automated | T-05.3 |
+| T-05.6 | Integration test: Doctor cannot schedule | Test - automated | T-05.2 |
+| T-05.7 | Check validation wording and booking screen | Test - manual | T-05.4 |
 
-### 6.4 EP-3 Appointments
+#### US-07 doctor-own-appointments (Epic E4) - Blocked by: US-05
 
-#### US-05 appointment-scheduling (depends on US-04, US-02)
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-07.1 | Service: list appointments of the logged-in doctor | Code | none |
+| T-07.2 | Doctor schedule page | Code | T-07.1 |
+| T-07.3 | Integration test: Doctor A cannot see Doctor B's appointments | Test - automated | T-07.1 |
 
-| Task | Description | Depends on |
-|---|---|---|
-| T-05.1 | Create Appointment data model (patient, doctor, date, time, status) | none |
-| T-05.2 | Implement schedule, change and cancel endpoints | T-05.1 |
-| T-05.3 | Validation: no past dates, no inactive patient or doctor | T-05.2 |
-| T-05.4 | [AUTO] Unit tests for the validation rules | T-05.3 |
-| T-05.5 | [AUTO] Integration test: Doctor cannot schedule appointments | T-05.2 |
-- A new requirement or a change in the scenario appears.
-- A bug or technical problem blocks a planned story.
-- Acceptance criteria are unclear when planning starts.
+#### US-08 visit-notes (Epic E5) - Blocked by: US-04, US-05
+
+| Task | Description | Kind | Blocked by |
+|---|---|---|---|
+| T-08.1 | VisitNote entity and migration | Code | none |
+| T-08.2 | Service: add note (own patients only) | Code | T-08.1 |
+| T-08.3 | Service: read medical history (own patients only) | Code | T-08.1 |
+| T-08.4 | Visit notes page | Code | T-08.2, T-08.3 |
+| T-08.5 | Integration tests: Receptionist, Admin and other doctors are refused | Test - automated | T-08.2, T-08.3 |
+| T-08.6 | Check that a note shows date and doctor name | Test - manual | T-08.4 |
+
+Not decomposed yet (refined in later sprints): US-03, US-06, US-09, US-11, US-12, US-13, US-14.
+
+## 7. Estimation
+
+Story points are relative: they compare stories with each other and are not hours. They consider amount of work, technical complexity, uncertainty, dependencies and testing effort.
+
+| Points | Meaning |
+|---|---|
+| 1 | Trivial: one or two files, barely any test |
+| 2 | Small: routine work on something that already exists |
+| 3 | Standard: several tasks, a few tests, nothing new. The anchor is here |
+| 5 | Substantial: multiple layers, a business rule with boundary cases |
+| 8 | Large or unfamiliar: new technology or security, needs reading first |
+| 13 | Too big: not an estimate, split the story before it enters a sprint |
+
+**Anchor story:** US-04 (register, search and edit patients) = 3. Every other story is compared with it.
+
+| ID | Story | Points | Why |
+|---|---|---|---|
+| US-01 | User accounts, login and roles | 8 | Security and role checks everywhere, high uncertainty |
+| US-02 | Manage doctors | 2 | Routine form on a simple entity |
+| US-03 | Audit log | 3 | Logging hooks in several places |
+| US-04 | Manage patients | 3 | Anchor |
+| US-05 | Schedule, change, cancel appointments | 5 | Two relations and validation rules |
+| US-06 | Double-booking warning | 2 | One extra check |
+| US-07 | Doctor sees own appointments | 2 | One filtered query and a list |
+| US-08 | Visit notes and medical history | 3 | Like patients, plus an ownership check |
+| US-09 | Mark appointment completed | 2 | Status change with an ownership check |
+| US-10 | CI pipeline | 5 | New tool, first workflow |
+| US-11 | Container and automatic publishing | 5 | New tool, uncertainty |
+| US-12 | CSV export | 3 | Simple output, authorisation filter is easy to get wrong |
+| US-13 | End-to-end tests | 3 | Browser test tooling |
+| US-14 | Monitoring metrics | 3 | New tool, small scope |
+
+## 8. Sprint backlogs
+
+Sprint length: 2 weeks. First-sprint capacity: about 13 points (a guess). After Sprint 1 it is replaced by the points that were actually finished.
+
+| Sprint | Goal | Stories | Points |
+|---|---|---|---|
+| 1 | Login works and the pipeline builds and tests | US-01, US-10 | 13 |
+| 2 | Patient and doctor records work and the container is published | US-04, US-02, US-11 | 10 |
+| 3 | Appointments and clinical notes work | US-05, US-06, US-07, US-08 | 12 |
+| 4 | Completion, export, audit log and monitoring | US-09, US-12, US-03, US-13, US-14 | 14 |
+
+## 9. Tools and stack
+
+- **Language and framework:** Python with FastAPI. Simple to write and containerise.
+- **Database:** PostgreSQL. Has an official container image and is easy to run in CI.
+- **Test runner:** pytest. Runs headless in GitHub Actions.
+- **End-to-end tests:** Playwright for Python. Works headless in CI.
+- **CI/CD:** GitHub Actions. Lives next to the repository and the board.
+- **Container:** Docker.
 
 Refinement is done regularly, once per sprint, around the middle of the sprint.
