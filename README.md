@@ -46,21 +46,71 @@ Every "No" in this table means the app must refuse the request, and there should
 
 ## 4. Product backlog
 
+### 4.1 User stories
+
+Stories marked *(invented)* are my own additions, one per role. US-10 to US-14 were added in Lab 2 (see section 6.1).
+
+**US-01**: As an **Administrator**, I want to create and disable user accounts and assign roles, so that only authorised staff can use the system and each person sees only what their role allows.
+Acceptance criteria:
+- Given I am an Administrator, when I create a user with a role, then that user can log in with that role's permissions.
+- Given I disable a user, when they try to log in, then access is refused.
+- Given I am not an Administrator, when I open user management, then the system refuses.
+
+**US-02**: As an **Administrator**, I want to register, update and deactivate doctors, so that appointments can only be booked with real, active doctors.
+
+**US-03 (invented)**: As an **Administrator**, I want to see who viewed or changed records and when, so that I can investigate misuse of sensitive data.
+
+**US-04**: As a **Receptionist**, I want to register, search and edit patients, so that patient details are correct before any appointment is booked.
+Acceptance criteria:
+- Given I submit a valid patient form, then the patient is saved and appears in search.
+- Given required fields are missing, when I submit, then the system shows an error and saves nothing.
+
+**US-05**: As a **Receptionist**, I want to schedule, change and cancel appointments, so that every patient has a confirmed time slot and the schedule stays accurate.
+
+**US-06 (invented)**: As a **Receptionist**, I want a warning when a doctor is already booked at the chosen time, so that I do not create overlapping appointments.
+
+**US-07**: As a **Doctor**, I want to see only my own appointments, so that I know who I am seeing today.
+
+**US-08**: As a **Doctor**, I want to record a diagnosis and visit notes, so that the treatment is documented for future visits.
+Acceptance criteria:
+- Given the patient is mine, when I save a note, then it is stored with the date and my name.
+- Given the patient is not mine, when I try to add a note, then the system refuses.
+- Given I am a Receptionist or Administrator, when I try to add a note, then the system refuses.
+
+**US-09 (invented)**: As a **Doctor**, I want to mark an appointment as completed, so that the schedule shows which visits are already done.
+
+### 4.2 Backlog order (Product Owner)
+
+| Order | ID | Story |
+|---|---|---|
+| 1 | US-01 | Manage user accounts and roles |
+| 2 | US-10 | CI pipeline |
+| 3 | US-04 | Register, search and edit patients |
+| 4 | US-02 | Manage doctors |
+| 5 | US-11 | Container and automatic publishing |
+| 6 | US-05 | Schedule, change and cancel appointments |
+| 7 | US-07 | Doctor views own appointments |
+| 8 | US-08 | Record diagnosis and visit notes |
+| 9 | US-06 | Double-booking warning (invented) |
+| 10 | US-09 | Mark appointment completed (invented) |
+| 11 | US-12 | CSV export |
+| 12 | US-03 | Audit log (invented) |
+| 13 | US-13 | End-to-end tests |
+| 14 | US-14 | Monitoring metrics |
+
+### 4.3 Why the top three
+
+US-01 comes first because nothing else can be tested without users and roles, and the whole RBAC depends on it. US-10 comes second because a working pipeline means every later story is built and tested automatically from the start. US-04 comes third because appointments need patients to exist, so it unlocks scheduling.
+
 ## 5. Process and ceremonies
 
 ### 5.1 Sprint length
 
 Sprint duration: **2 weeks**. It is long enough to finish a few stories and short enough to correct course quickly.
 
-### 5.2 Sprint backlog (Sprint 1)
+### 5.2 Sprint backlogs
 
-Taken from the top of the Product Backlog:
-
-| ID | Story |
-|---|---|
-| US-01 | Manage user accounts and roles |
-| US-04 | Register, search and edit patients |
-| US-02 | Manage doctors |
+The four sprints are outlined in section 8. Sprint 1 contains US-01 and US-10 (13 points).
 
 ### 5.3 Ceremonies
 
@@ -75,6 +125,20 @@ Taken from the top of the Product Backlog:
 
 - A story is too big to finish in one sprint, so it needs splitting.
 - Feedback from the Sprint Review changes priorities.
+- A new requirement or a change in the scenario appears.
+- A bug or technical problem blocks a planned story.
+- Acceptance criteria are unclear when planning starts.
+
+Refinement is done regularly, once per sprint, around the middle of the sprint.
+
+### 5.5 Definition of Done
+
+A story is done when:
+- the code is merged into `main` through a pull request;
+- the CI build is green;
+- it has at least one automated test and all tests pass;
+- every "No" in the RBAC matrix that it touches is covered by a test;
+- all its acceptance criteria are met.
 
 
 ## 6. Task decomposition
