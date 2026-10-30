@@ -293,3 +293,13 @@ Sprint length: 2 weeks. First-sprint capacity: about 13 points (a guess). After 
 - **Container:** Docker.
 
 Refinement is done regularly, once per sprint, around the middle of the sprint.
+
+
+## Branch naming
+
+`<issue-number>-<story-or-task-id>-<short-description>`, e.g. `23-t-05-3-conflict-rule`.
+
+- One branch per task or small story.
+- Always from an up-to-date main.
+- Issue number first, so automation can parse it.
+- Never commit directly to main.
